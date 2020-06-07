@@ -65,14 +65,24 @@ def create_pdf(map, side):
         pdf.add_page()
         pdf.cell(0, txt=name, ln=1, align='C')
 
-        fname = '/'.join([os.path.curdir, map, side, dir_name, 'text.txt'])
-        if os.path.isfile(fname):
-            with open(fname) as f:
+        nade_path = '/'.join([os.path.curdir, map, side, dir_name])
+        fname_txt = nade_path + '/text.txt'
+        if os.path.isfile(fname_txt):
+            with open(fname_txt) as f:
                 nade_text = f.read()
             pdf.set_font('Open Sans')
-            pdf.y += pdf.l_margin
+            pdf.y += pdf.l_margin + 2
             pdf.multi_cell(0, 5, txt=nade_text)
             pdf.set_font('Open Sans Bold')
+
+        fname_throw = nade_path + '/throw.txt'
+        if os.path.isfile(fname_throw):
+            with open(fname_throw) as f:
+                throw = f.read()
+            old_y = pdf.y
+            pdf.y = 10.5
+            pdf.cell(50, txt=throw, ln=1)
+            pdf.y = old_y
 
         row_counter = 0
         for nade_group in NADE_GROUPS:
