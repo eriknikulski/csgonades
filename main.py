@@ -19,7 +19,7 @@ NADE_GROUPS = [
 ]
 
 
-def get_structure(map, side):
+def get_structure(map, side, allowed_nades):
     nades = {}
     structure = {}
 
@@ -34,20 +34,20 @@ def get_structure(map, side):
             nades[nade] = [root + '/' + file for file in files]
 
     structure_smokes = {}
-    structure_mollys = {}
+    structure_mollies = {}
     structure_flashes = {}
     structure_hes = {}
     for nade_name in nades:
-        if 'smoke' in nade_name:
+        if 'smokes' in allowed_nades and 'smoke' in nade_name:
             structure_smokes[nade_name] = nades[nade_name]
-        if 'molly' in nade_name:
-            structure_mollys[nade_name] = nades[nade_name]
-        if 'flash' in nade_name:
+        if 'mollies' in allowed_nades and 'molly' in nade_name:
+            structure_mollies[nade_name] = nades[nade_name]
+        if 'flashes' in allowed_nades and 'flash' in nade_name:
             structure_flashes[nade_name] = nades[nade_name]
-        if 'hes' in nade_name:
+        if 'hes' in allowed_nades and 'hes' in nade_name:
             structure_hes[nade_name] = nades[nade_name]
 
-    return {**structure_smokes, **structure_mollys, **structure_flashes, **structure_hes}
+    return {**structure_smokes, **structure_mollies, **structure_flashes, **structure_hes}
 
 
 def create_front_page(pdf, map, nades):
@@ -64,10 +64,12 @@ def create_front_page(pdf, map, nades):
         counter += 1
 
 
-def create_pdf(map, side):
+def create_pdf(map, side, nades=['smokes', 'mollies', 'flashes', 'hes']):
     if not os.path.exists(os.path.curdir + '/maps/' + map + '/' + side):
         return
-    nades = get_structure(map, side)
+
+    nade_string = '' if nades == ['smokes', 'mollies', 'flashes', 'hes'] else '_' + '_'.join(nades)
+    nades = get_structure(map, side, nades)
 
     pdf = FPDF()
     pdf.add_font('Open Sans', '', os.path.curdir + '/fonts/Open_Sans/OpenSans-Regular.ttf', uni=True)
@@ -125,7 +127,7 @@ def create_pdf(map, side):
 
         nade_counter += 1
 
-    pdf.output(f'maps/{map}/{map}_nades_{side}.pdf')
+    pdf.output(f'maps/{map}/{map}_nades_{side}{nade_string}.pdf')
 
 
 if __name__ == '__main__':
@@ -134,9 +136,17 @@ if __name__ == '__main__':
                         help='a map for which the pdf should be created')
     parser.add_argument('--side', dest='side', type=str,
                         help='a side for which the pdf should be created')
+    parser.add_argument('--nades', dest='nades', type=str, nargs='*',
+                        help='nades for which the pdf should be created. Enter multiple nades separated with spaces. '
+                             'Should be one or all of smokes, mollies, flashes, hes')
     args = parser.parse_args()
+
+    nades = ['smokes', 'mollies', 'flashes', 'hes']
+    if args.nades and all(i in ['smokes', 'mollies', 'flashes', 'hes'] for i in args.nades):
+        nades = args.nades
+
     if args.side and args.side in ['t', 'ct']:
-        create_pdf(args.map[0], side=args.side)
+        create_pdf(args.map[0], side=args.side, nades=nades)
     else:
-        create_pdf(args.map[0], side='t')
-        create_pdf(args.map[0], side='ct')
+        create_pdf(args.map[0], side='t', nades=nades)
+        create_pdf(args.map[0], side='ct', nades=nades)
