@@ -69,8 +69,6 @@ def create_pdf(map, side):
         return
     nades = get_structure(map, side)
 
-    pprint.pprint(nades)
-
     pdf = FPDF()
     pdf.add_font('Open Sans', '', os.path.curdir + '/fonts/Open_Sans/OpenSans-Regular.ttf', uni=True)
     pdf.add_font('Open Sans Bold', '', os.path.curdir + '/fonts/Open_Sans/OpenSans-Bold.ttf', uni=True)
@@ -134,6 +132,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Create pdf for a given map')
     parser.add_argument('map', type=str, nargs=1,
                         help='a map for which the pdf should be created')
+    parser.add_argument('--side', dest='side', type=str,
+                        help='a side for which the pdf should be created')
     args = parser.parse_args()
-    create_pdf(args.map[0], side='t')
-    create_pdf(args.map[0], side='ct')
+    if args.side and args.side in ['t', 'ct']:
+        create_pdf(args.map[0], side=args.side)
+    else:
+        create_pdf(args.map[0], side='t')
+        create_pdf(args.map[0], side='ct')
