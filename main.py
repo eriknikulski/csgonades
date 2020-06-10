@@ -3,6 +3,8 @@ import os
 import argparse
 from fpdf import FPDF
 
+import pprint
+
 A4_WIDTH = 210
 A4_HEIGHT = 297
 
@@ -19,6 +21,7 @@ NADE_GROUPS = [
 
 def get_structure(map, side):
     nades = {}
+    structure = {}
 
     for root, dirs, files in os.walk(os.path.curdir + '/maps/' + map + '/' + side):
         if not nades:
@@ -29,7 +32,22 @@ def get_structure(map, side):
 
         if nade in nades:
             nades[nade] = [root + '/' + file for file in files]
-    return nades
+
+    structure_smokes = {}
+    structure_mollys = {}
+    structure_flashes = {}
+    structure_hes = {}
+    for nade_name in nades:
+        if 'smoke' in nade_name:
+            structure_smokes[nade_name] = nades[nade_name]
+        if 'molly' in nade_name:
+            structure_mollys[nade_name] = nades[nade_name]
+        if 'flash' in nade_name:
+            structure_flashes[nade_name] = nades[nade_name]
+        if 'hes' in nade_name:
+            structure_hes[nade_name] = nades[nade_name]
+
+    return {**structure_smokes, **structure_mollys, **structure_flashes, **structure_hes}
 
 
 def create_front_page(pdf, map, nades):
@@ -50,6 +68,8 @@ def create_pdf(map, side):
     if not os.path.exists(os.path.curdir + '/maps/' + map + '/' + side):
         return
     nades = get_structure(map, side)
+
+    pprint.pprint(nades)
 
     pdf = FPDF()
     pdf.add_font('Open Sans', '', os.path.curdir + '/fonts/Open_Sans/OpenSans-Regular.ttf', uni=True)
