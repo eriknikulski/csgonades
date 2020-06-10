@@ -12,4 +12,7 @@ Create only for some nades with the optional argument ```--nades ``` and put aft
 Where a nade is part of ```['smokes', 'mollies', 'flashes', 'hes']```.
 
 
-Example: ```python3 main.pdf inferno --side=t --nades smokes flashes```
+Example: 
+```python
+python3 main.pdf inferno --side=t --nades smokes flashes
+```
