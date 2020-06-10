@@ -13,14 +13,14 @@ INTER_IMAGE_GAP = 2
 NADE_GROUPS = [
     ['lineup_crosshair.jpg', 'lineup.jpg'],
     ['pos_shot.jpg', 'pos_bot.jpg'],
-    ['effect.jpg']
+    ['effect.jpg', 'last.jpg']
 ]
 
 
 def get_structure(map, side):
     nades = {}
 
-    for root, dirs, files in os.walk(os.path.curdir + '/' + map + '/' + side):
+    for root, dirs, files in os.walk(os.path.curdir + '/maps/' + map + '/' + side):
         if not nades:
             nades = dict.fromkeys(dirs)
             continue
@@ -47,7 +47,7 @@ def create_front_page(pdf, map, nades):
 
 
 def create_pdf(map, side):
-    if not os.path.exists(os.path.curdir + '/' + map + '/' + side):
+    if not os.path.exists(os.path.curdir + '/maps/' + map + '/' + side):
         return
     nades = get_structure(map, side)
 
@@ -65,7 +65,7 @@ def create_pdf(map, side):
         pdf.add_page()
         pdf.cell(0, txt=name, ln=1, align='C')
 
-        nade_path = '/'.join([os.path.curdir, map, side, dir_name])
+        nade_path = '/'.join([os.path.curdir, 'maps', map, side, dir_name])
         fname_txt = nade_path + '/text.txt'
         if os.path.isfile(fname_txt):
             with open(fname_txt) as f:
@@ -107,7 +107,7 @@ def create_pdf(map, side):
 
         nade_counter += 1
 
-    pdf.output(f'{map}/{map}_nades_{side}.pdf')
+    pdf.output(f'maps/{map}/{map}_nades_{side}.pdf')
 
 
 if __name__ == '__main__':
