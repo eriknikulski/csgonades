@@ -145,8 +145,14 @@ if __name__ == '__main__':
     if args.nades and all(i in ['smokes', 'mollies', 'flashes', 'hes'] for i in args.nades):
         nades = args.nades
 
-    if args.side and args.side in ['t', 'ct']:
-        create_pdf(args.map[0], side=args.side, nades=nades)
+    if args.map[0] == 'all':
+        maps = [map for map in os.listdir(os.path.curdir + '/maps/') if not map.startswith('.')]
     else:
-        create_pdf(args.map[0], side='t', nades=nades)
-        create_pdf(args.map[0], side='ct', nades=nades)
+        maps = [args.map[0]]
+
+    for map in maps:
+        if args.side and args.side in ['t', 'ct']:
+            create_pdf(map, side=args.side, nades=nades)
+        else:
+            create_pdf(map, side='t', nades=nades)
+            create_pdf(map, side='ct', nades=nades)

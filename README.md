@@ -6,6 +6,8 @@ To create a pdf for inferno use:
 python3 main.py inferno
 ```
 
+You can create pdfs for all maps, just put ```all``` as the map argument.
+
 Create for one side only with the optional argument ```--side=?``` and place ether ```t``` or ```ct``` at ```?```.
 
 Create only for some nades with the optional argument ```--nades ``` and put after that a space separated list of the nades you want.
