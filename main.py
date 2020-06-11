@@ -68,6 +68,8 @@ def create_pdf(map, side, nades=['smokes', 'mollies', 'flashes', 'hes']):
     if not os.path.exists(os.path.curdir + '/maps/' + map + '/' + side):
         return
 
+    print(f'Creating pdf for {map} on {side} side with {", ".join(nades)} ....')
+
     nade_string = '' if nades == ['smokes', 'mollies', 'flashes', 'hes'] else '_' + '_'.join(nades)
     nades = get_structure(map, side, nades)
 
