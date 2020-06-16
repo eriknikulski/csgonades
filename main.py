@@ -89,8 +89,6 @@ def create_pdf(map, side, nades=['smokes', 'mollies', 'flashes', 'hes']):
             with open(fname_importance) as f:
                 importance = f.read()
                 if importance == 'specific':
-                    pdf.image(os.path.curdir + '/icons/background_green.png', x=0, y=0, w=210)
-                elif importance == 'relevant':
                     pdf.image(os.path.curdir + '/icons/background_yellow.png', x=0, y=0, w=210)
 
         pdf.cell(0, txt=name, ln=1, align='C')
