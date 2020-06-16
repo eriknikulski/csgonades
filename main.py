@@ -3,8 +3,6 @@ import os
 import argparse
 from fpdf import FPDF
 
-import pprint
-
 A4_WIDTH = 210
 A4_HEIGHT = 297
 
@@ -21,7 +19,6 @@ NADE_GROUPS = [
 
 def get_structure(map, side, allowed_nades):
     nades = {}
-    structure = {}
 
     for root, dirs, files in os.walk(os.path.curdir + '/maps/' + map + '/' + side):
         if not nades:
@@ -84,10 +81,20 @@ def create_pdf(map, side, nades=['smokes', 'mollies', 'flashes', 'hes']):
 
     for dir_name, nade in nades.items():
         name = str(nade_counter) + '. ' + dir_name.replace('_', ' ').upper()
+        nade_path = '/'.join([os.path.curdir, 'maps', map, side, dir_name])
         pdf.add_page()
+
+        fname_importance = nade_path + '/importance.txt'
+        if os.path.isfile(fname_importance):
+            with open(fname_importance) as f:
+                importance = f.read()
+                if importance == 'specific':
+                    pdf.image(os.path.curdir + '/icons/background_green.png', x=0, y=0, w=210)
+                elif importance == 'relevant':
+                    pdf.image(os.path.curdir + '/icons/background_yellow.png', x=0, y=0, w=210)
+
         pdf.cell(0, txt=name, ln=1, align='C')
 
-        nade_path = '/'.join([os.path.curdir, 'maps', map, side, dir_name])
         fname_txt = nade_path + '/text.txt'
         if os.path.isfile(fname_txt):
             with open(fname_txt) as f:
