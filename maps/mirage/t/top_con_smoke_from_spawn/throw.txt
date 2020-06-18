@@ -1,1 +1,1 @@
-crouch walk, jump throw at pos 2
+crouch walk throw at pos 2
